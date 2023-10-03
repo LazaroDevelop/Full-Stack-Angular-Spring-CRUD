@@ -26,34 +26,36 @@
     <section class="row">
         <section class="form-insert col-6">
             <form action="" method="post" class="mt-2 insert-api card bg-warning container">
-                <h1 class="h3 mb-3 fw-normal text-center text-white">Create your profile</h1>
+                <h1 class="h3 mb-3 fw-normal text-center text-white">Create your contact profile</h1>
                 <div class="d-flex">
-                    <div class="w-100 p-2 d-flex flex-column">
+                    <div class="w-100 d-flex flex-column">
                         <label for="firstName" class="text-center fw-bold">First Name</label>
                         <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Insert your first name here">
                     </div>
-                    <div class="w-100 p-2 d-flex flex-column">
+                    <div class="w-100 d-flex flex-column">
                         <label for="secondName" class="text-center fw-bold">Second Name</label>
                         <input type="text" class="form-control" name="secondName" id="secondName" placeholder="Insert your second name here">
                     </div>
                 </div>
                 <div class="d-flex">
-                    <div class="w-100 p-2 d-flex flex-column">
+                    <div class="w-100 d-flex flex-column" id="address-div">
                         <label for="addresses" class="text-center fw-bold">Addresses</label>
                         <input type="text" class="form-control" name="addresses" id="addresses" placeholder="Insert your address here">
                     </div>
-                    <div class="w-100 p-2 d-flex flex-column">
-                        <label for="birthday" class="text-center fw-bold">Birthday</label>
+                    <button class="btn btn-dark h-25 mt-4" id="add-address">add</button>
+                    <div class="w-100 d-flex flex-column">
+                        <label for="birthday" class="text-center fw-bold">Day of Birth</label>
                         <input type="date" class="form-control" name="birthday" id="birthday">
                     </div>
                 </div>
                 <div class="d-flex">
-                    <div class="w-100 p-2 d-flex flex-column">
-                        <label for="phoneNumber" class="text-center fw-bold">Phone number</label>
+                    <div class="w-100 d-flex flex-column" id="phone-number-div">
+                        <label for="phoneNumber" class="text-center fw-bold">Phone numbers</label>
                         <input type="text" class="form-control" name="phoneNumber" id="phoneNumber" placeholder="Insert your phone number here">
                     </div>
-                    <div class="w-100 p-2 d-flex flex-column">
-                        <label for="personalPicture" class="text-center fw-bold">Personal picture</label>
+                    <button class="btn btn-dark h-25 mt-4" id="add-phone-number">add</button>
+                    <div class="w-100 d-flex flex-column">
+                        <label for="personalPicture" class="text-center fw-bold">Personal photo</label>
                         <input type="text" class="form-control" name="personalPicture" id="personalPicture"placeholder="Insert a link for personal picture here">
                     </div>
                 </div>
@@ -65,32 +67,25 @@
         <section class="col-6 card mt-2 bg-info">
             <h1 class="h3 mb-3 fw-normal text-center text-white">Search information</h1>
             <div class="d-flex">
-                <form action="" method="get" class="find-by-first-name w-100">
-                    <label for="" class="fw-bold">Find by first name</label>
+                <form action="" method="get" class="find-by-name w-100">
+                    <label for="" class="fw-bold">Find by name</label>
                     <div class="d-flex">
-                        <input type="text" class="form-control" id="by-first-name" placeholder="Write first name">
+                        <input type="text" class="form-control" id="by-name" placeholder="Write your first or second name">
                         <button class="btn btn-md btn-dark submit-insert mx-1" type="submit">Find</button>
                     </div>
                 </form>
-                <form action="" method="get" class="find-by-second-name w-100">
-                    <label for="" class="fw-bold">Find by second name</label>
-                    <div class="d-flex">
-                        <input type="text" class="form-control" id="by-second-name" placeholder="Write second name">
-                        <button class="btn btn-md btn-dark submit-insert mx-1" type="submit">Find</button>
-                    </div>
-                </form> 
             </div>
-            <form action="" method="post" class="d-flex w-100" id="find-by-date-range">
+            <form action="" method="post" class="d-flex w-100" id="find-in-age-range">
                 <div class="w-100 align-items-center">
                     <label for="" class="p-1 fw-bold">From</label>
                     <div class="d-flex">
-                        <input type="date" class="form-control" id="beginDate">
+                        <input type="number" min="18" max="80" class="form-control" id="minAge">
                     </div>
                 </div>
                 <div class="w-100 align-items-center">
                     <label for="" class="p-1 fw-bold">To</label>
                     <div class="d-flex">
-                        <input type="date" class="form-control" id="endDate">
+                        <input type="number" min="18" max="80" class="form-control" id="maxAge">
                         <button class=" mx-1 btn btn-md btn-dark submit-insert" type="submit">Apply</button>
                     </div>
                 </div>

@@ -4,12 +4,17 @@ const formInsert = document.querySelector(".insert-api");
 const successMessage = document.getElementById("response-success");
 const errorMessage = document.getElementById("response-error");
 
+const addAddress = document.getElementById("add-address");
 
-const formFindByFirstName = document.querySelector(".find-by-first-name");
-const formFindBySecondName = document.querySelector(".find-by-second-name");
+const addPhoneNumber = document.getElementById("add-phone-number");
+
+var count = 0;
+var count1 = 0;
+
+const formFindByName = document.querySelector(".find-by-name");
 const res = document.querySelector("#response");
 
-const formFindByDateRange = document.querySelector("#find-by-date-range");
+const formFindInAgeRange = document.querySelector("#find-in-age-range");
 
 const cleaner = document.getElementById("cleaner");
 
@@ -61,6 +66,39 @@ function saveChanges(cell, value){
     cell.innerHTML = value;
 }
 
+addAddress.addEventListener("click", (e) => {
+    e.preventDefault();
+    const div = document.getElementById("address-div");
+    if(div.childNodes.length <= 6){
+        count++;
+        console.log(count);
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "Insert your address here";
+        input.className = "form-control";
+        input.id = "addresses".concat(count);
+        div.appendChild(input);
+    }else{
+        alert("You only have 3 address");
+    }
+})
+
+addPhoneNumber.addEventListener("click", (e) => {
+    e.preventDefault();
+    const div = document.getElementById("phone-number-div");
+    if(div.childNodes.length <= 6){
+        count1++;
+        console.log(count1);
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = "Add your phone number here";
+        input.className = "form-control";
+        input.id = "phoneNumber".concat(count1);
+        div.appendChild(input);
+    }else{
+        alert("You only have 3 phone numbers");
+    }
+})
 
 formInsert.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -68,13 +106,39 @@ formInsert.addEventListener("submit", (e) => {
     const firstName = document.getElementById("firstName").value;
     const secondName = document.getElementById("secondName").value;
     const addresses = document.getElementById("addresses").value;
-    const birthday = document.getElementById("birthday").value;
+    const addresses1 = document.getElementById("addresses1").value;
+    const addresses2 = document.getElementById("addresses2").value;
+    const dayOfBirth = document.getElementById("birthday").value;
     const phoneNumber = document.getElementById("phoneNumber").value;
+    const phoneNumber1 = document.getElementById("phoneNumber1").value;
+    const phoneNumber2 = document.getElementById("phoneNumber2").value;
     const personalPicture = document.getElementById("personalPicture").value;
 
     console.table(firstName, secondName, addresses, birthday, phoneNumber, personalPicture);
+    const address = [addresses];
 
-    const profile = {firstName: firstName, secondName: secondName, addresses: addresses, birthDay: birthday, phoneNumber: phoneNumber, personalPicture: personalPicture};
+    if(addresses1 !== "undefined" || addresses1 !== null){
+        address.push(addresses1);
+    } 
+    
+    if(addresses2 !== "undefined" || addresses2 !== null){
+        address.push(addresses2);
+    }
+
+    const phones = [phoneNumber];
+
+    if(phoneNumber1 !== "undefined" || phoneNumber1 !== null){
+        phones.push(phoneNumber1);
+    }
+
+    if(phoneNumber2 !== "undefined" || phoneNumber2 !== null){
+        phones.push(phoneNumber2);
+    }
+
+    console.log(address);
+    console.log(phones);
+
+    const contact = {firstName: firstName, secondName: secondName, addresses: address, dayOfBirth: dayOfBirth, phoneNumbers: phones, personalPhoto: personalPicture};
     
     const performRequest = API_URL.concat("/create-profile");
 
@@ -83,7 +147,7 @@ formInsert.addEventListener("submit", (e) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(profile),
+        body: JSON.stringify(contact),
     }).then(response => {
         if(!response.ok){
             throw new Error("Error de red o servidor");
@@ -100,13 +164,13 @@ formInsert.addEventListener("submit", (e) => {
 });
 
 
-formFindByFirstName.addEventListener("submit", (e) => {
+formFindByName.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const firstName = document.getElementById("by-first-name").value;
+    const name = document.getElementById("by-name").value;
     console.log(firstName);
     
-    const performRequest = API_URL.concat("/by-first-name/").concat(firstName);
+    const performRequest = API_URL.concat(`/by-name?name=${name}`);
     console.log(performRequest);
 
     loadMainData(performRequest);
@@ -114,30 +178,17 @@ formFindByFirstName.addEventListener("submit", (e) => {
 });
 
 
-formFindBySecondName.addEventListener("submit", (e) => {
+
+formFindInAgeRange.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const secondName = document.getElementById("by-second-name").value;
-    console.log(secondName);
-    
-    const performRequest = API_URL.concat("/by-second-name/").concat(secondName);
-    console.log(performRequest);
+    const minAge = document.querySelector("#minAge").value;
+    const maxAge = document.querySelector("#maxAge").value;
+    const ageRange = {minAge: minAge, maxAge: maxAge};
 
-    loadMainData(performRequest);
-    formFindByFirstName.reset();
-});
+    console.log(ageRange);
 
-
-formFindByDateRange.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const beginDate = document.querySelector("#beginDate").value;
-    const endDate = document.querySelector("#endDate").value;
-    const rangeDate = {beginDate: beginDate, endDate: endDate};
-
-    console.log(rangeDate);
-
-    const performRequest = API_URL.concat("/profiles/between-dates");
+    const performRequest = API_URL.concat("/contacts/between-age-range");
     console.log(performRequest);
 
     fetch(performRequest, {
@@ -145,7 +196,7 @@ formFindByDateRange.addEventListener("submit", (e) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(rangeDate)
+        body: JSON.stringify(ageRange)
     })
     .then(response => {
         if(!response.ok){
@@ -179,17 +230,17 @@ formFindByDateRange.addEventListener("submit", (e) => {
             row.appendChild(addressesCell);
 
             const birthDayCell = document.createElement("td");
-            birthDayCell.textContent = i.birthDay.toString().substring(0, 10);
+            birthDayCell.textContent = i.dayOfBirth;
             birthDayCell.id = "birthDayRowInfo".concat(i.id);
             row.appendChild(birthDayCell);
             
             const phoneNumberCell = document.createElement("td");
-            phoneNumberCell.textContent = i.phoneNumber;
+            phoneNumberCell.textContent = i.phoneNumbers;
             phoneNumberCell.id = "phoneNumberRowInfo".concat(i.id);
             row.appendChild(phoneNumberCell);
 
             const personalPictureCell = document.createElement("td");
-            personalPictureCell.textContent = i.personalPicture;
+            personalPictureCell.textContent = i.personalPhoto;
             personalPictureCell.id = "personalPictureRowInfo".concat(i.id);
             row.appendChild(personalPictureCell);
 
@@ -202,20 +253,20 @@ formFindByDateRange.addEventListener("submit", (e) => {
                 const currentFirstName = document.querySelector("#firstNameRowInfo".concat(i.id)).textContent;
                 const currentSecondName = document.querySelector("#secondNameRowInfo".concat(i.id)).textContent;
                 const currentAddresses = document.querySelector("#addressesRowInfo".concat(i.id)).textContent;
-                const currentBirthDay = document.querySelector("#birthDayRowInfo".concat(i.id)).textContent;
-                const currentPhoneNumber = document.querySelector("#phoneNumberRowInfo".concat(i.id)).textContent;
-                const currentPersonalPicture = document.querySelector("#personalPictureRowInfo".concat(i.id)).textContent;
+                const currentDayOfBird = document.querySelector("#birthDayRowInfo".concat(i.id)).textContent;
+                const currentPhoneNumbers = document.querySelector("#phoneNumberRowInfo".concat(i.id)).textContent;
+                const currentPersonalPhoto = document.querySelector("#personalPictureRowInfo".concat(i.id)).textContent;
                 
-                const currentProfile = {
+                const contact = {
                     firstName: currentFirstName, 
                     secondName: currentSecondName, 
-                    addresses: currentAddresses,
-                    birthDay: currentBirthDay,
-                    phoneNumber: currentPhoneNumber,
-                    personalPicture: currentPersonalPicture
+                    addresses: [currentAddresses],
+                    dayOfBirth: currentDayOfBird,
+                    phoneNumbers: [currentPhoneNumbers],
+                    personalPhoto: currentPersonalPhoto
                 }
 
-                console.log(currentProfile);
+                console.log(contact);
 
                 const performRequest = API_URL.concat("/modify-profile/").concat(i.id);
                 console.log(performRequest);
@@ -225,7 +276,7 @@ formFindByDateRange.addEventListener("submit", (e) => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(currentProfile)
+                    body: JSON.stringify(contact)
                 })
                 .then(response => {
                     if(!response.ok){
@@ -235,6 +286,7 @@ formFindByDateRange.addEventListener("submit", (e) => {
                 })
                 .then(data => {
                     console.log(data);
+                    alert(data);
                     loadMainData();
                 })
                 .catch(error => {
@@ -269,6 +321,7 @@ formFindByDateRange.addEventListener("submit", (e) => {
                 })
                 .then(data => {
                     console.log(data);
+                    alert(data);
                     loadMainData();
                 })
                 .catch(error => {
@@ -304,6 +357,9 @@ function loadMainData(performRequest){
         }
         return response.json();
     }).then(data => {
+        if(data.length === 0){
+            alert("No hay elementos a mostrar...")
+        }
         
         while(tbody.firstChild){
             tbody.removeChild(tbody.firstChild);
@@ -329,17 +385,17 @@ function loadMainData(performRequest){
             row.appendChild(addressesCell);
 
             const birthDayCell = document.createElement("td");
-            birthDayCell.textContent = i.birthDay.toString().substring(0, 10);
+            birthDayCell.textContent = i.dayOfBirth;
             birthDayCell.id = "birthDayRowInfo".concat(i.id);
             row.appendChild(birthDayCell);
             
             const phoneNumberCell = document.createElement("td");
-            phoneNumberCell.textContent = i.phoneNumber;
+            phoneNumberCell.textContent = i.phoneNumbers;
             phoneNumberCell.id = "phoneNumberRowInfo".concat(i.id);
             row.appendChild(phoneNumberCell);
 
             const personalPictureCell = document.createElement("td");
-            personalPictureCell.textContent = i.personalPicture;
+            personalPictureCell.textContent = i.personalPhoto;
             personalPictureCell.id = "personalPictureRowInfo".concat(i.id);
             row.appendChild(personalPictureCell);
 
@@ -359,10 +415,10 @@ function loadMainData(performRequest){
                 const currentProfile = {
                     firstName: currentFirstName, 
                     secondName: currentSecondName, 
-                    addresses: currentAddresses,
-                    birthDay: currentBirthDay,
-                    phoneNumber: currentPhoneNumber,
-                    personalPicture: currentPersonalPicture
+                    addresses: [currentAddresses],
+                    dayOfBirth: currentBirthDay,
+                    phoneNumbers: [currentPhoneNumber],
+                    personalPhoto: currentPersonalPicture
                 }
 
                 console.log(currentProfile);
