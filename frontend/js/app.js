@@ -18,6 +18,8 @@ const formFindInAgeRange = document.querySelector("#find-in-age-range");
 
 const cleaner = document.getElementById("cleaner");
 
+const formFindByAddress = document.querySelector(".find-by-addresses");
+
 //table section
 const table = document.querySelector(".table");
 const tbody = table.querySelector(".tbody");
@@ -106,32 +108,32 @@ formInsert.addEventListener("submit", (e) => {
     const firstName = document.getElementById("firstName").value;
     const secondName = document.getElementById("secondName").value;
     const addresses = document.getElementById("addresses").value;
-    const addresses1 = document.getElementById("addresses1").value;
-    const addresses2 = document.getElementById("addresses2").value;
+    const addresses1 = document.getElementById("addresses1")?.value;
+    const addresses2 = document.getElementById("addresses2")?.value;
     const dayOfBirth = document.getElementById("birthday").value;
     const phoneNumber = document.getElementById("phoneNumber").value;
-    const phoneNumber1 = document.getElementById("phoneNumber1").value;
-    const phoneNumber2 = document.getElementById("phoneNumber2").value;
+    const phoneNumber1 = document.getElementById("phoneNumber1")?.value;
+    const phoneNumber2 = document.getElementById("phoneNumber2")?.value;
     const personalPicture = document.getElementById("personalPicture").value;
 
     console.table(firstName, secondName, addresses, birthday, phoneNumber, personalPicture);
     const address = [addresses];
 
-    if(addresses1 !== "undefined" || addresses1 !== null){
+    if(addresses1 !== undefined && addresses1 !== null){
         address.push(addresses1);
     } 
     
-    if(addresses2 !== "undefined" || addresses2 !== null){
+    if(addresses2 !== undefined && addresses2 !== null){
         address.push(addresses2);
     }
 
     const phones = [phoneNumber];
 
-    if(phoneNumber1 !== "undefined" || phoneNumber1 !== null){
+    if(phoneNumber1 !== undefined && phoneNumber1 !== null){
         phones.push(phoneNumber1);
     }
 
-    if(phoneNumber2 !== "undefined" || phoneNumber2 !== null){
+    if(phoneNumber2 !== undefined && phoneNumber2 !== null){
         phones.push(phoneNumber2);
     }
 
@@ -154,7 +156,7 @@ formInsert.addEventListener("submit", (e) => {
         }
         return response.json();
     }).then(data => {
-        console.log(data);
+        console.log("Data: ",data);
         formInsert.reset();
         successMessage.hidden = false;
         loadMainData(null);
@@ -176,6 +178,36 @@ formFindByName.addEventListener("submit", (e) => {
     loadMainData(performRequest);
     formFindByFirstName.reset();
 });
+
+formFindByAddress.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const address = document.getElementById("by-address").value;
+    console.log(address);
+
+    const performRequest = API_URL.concat(`/by-addresses?address=${address}`);
+    console.log(performRequest);
+
+    fetch(performRequest, {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if(!response.ok){
+            throw new Error("Error de red o servidor")
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+    })
+    .catch(error => {
+        console.error(error);
+    })
+
+})
 
 
 
