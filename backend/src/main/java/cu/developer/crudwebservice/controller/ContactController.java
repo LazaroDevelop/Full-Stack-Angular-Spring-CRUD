@@ -67,6 +67,15 @@ public class ContactController {
         }
         return ResponseEntity.ok(profileDtos);
     }
+    
+    @GetMapping("/by-addresses")
+    ResponseEntity<List<ContactDto>> findByAddresses(@RequestParam(name = "address", required = true) String address){
+        List<ContactDto> contactDtos = this.serviceImp.findByAddress(address);
+        if(contactDtos.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(contactDtos);
+    }
 
     @PostMapping("/create-profile")
     public ResponseEntity<ContactDto> saveProfile(@RequestBody Contact profile){

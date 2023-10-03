@@ -46,12 +46,12 @@ public class ContactServiceImp implements ContactService{
     
     @Override
     public List<ContactDto> findByAddress(String address){
-        List<Contact> contacts = this.repository.findAllByAddressesContainingIgnoreCase(address);
-        List<ContactDto> contactDtos = contacts
+        List<Contact> contacts = this.repository.findAllByAddressesContains(address);
+        log.info("list size: {}", contacts.size());
+        return contacts
                 .stream()
                 .map(i -> mapper.mapTo(i))
                 .collect(Collectors.toList());
-        return contactDtos;
     }
 
     @Override
@@ -59,11 +59,10 @@ public class ContactServiceImp implements ContactService{
         LocalDate beginDate = LocalDate.now().minusYears(ages.getMaxAge());
         LocalDate endDate = LocalDate.now().minusYears(ages.getMinAge() + 1);
         List<Contact> contacts = this.repository.findByDayOfBirthBetween(beginDate, endDate);
-        List<ContactDto> contactDtos = contacts
+        return contacts
                 .stream()
                 .map(i -> mapper.mapTo(i))
                 .collect(Collectors.toList());
-        return contactDtos;
     }
 
     @Override
@@ -81,9 +80,9 @@ public class ContactServiceImp implements ContactService{
 
     @Override
     public Contact updateProfile(Long id, Contact contact) {
-        Optional<Contact> contac1 = this.repository.findById(id);
-        if(contac1.isPresent()){
-            Contact c = contac1.get();
+        Optional<Contact> contact1 = this.repository.findById(id);
+        if(contact1.isPresent()){
+            Contact c = contact1.get();
             c.setFirstName(contact.getFirstName());
             c.setSecondName(contact.getSecondName());
             c.setAddresses(contact.getAddresses());
