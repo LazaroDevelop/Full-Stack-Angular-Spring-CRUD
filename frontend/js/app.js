@@ -202,6 +202,7 @@ formFindByAddress.addEventListener("submit", (e) => {
     })
     .then(data => {
         console.log(data);
+        loadMainData(performRequest);
     })
     .catch(error => {
         console.error(error);
